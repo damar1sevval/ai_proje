@@ -1,5 +1,7 @@
 # Akıllı Güvenlik, Nesne Takibi ve Yasak Bölge İhlal Tespit Sistemi
 
+[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/damar1sevval/ai_proje/blob/main/sevval_ai_proje_son.ipynb)
+
 Bu proje, **RYZ2002 Yapay Zeka Uygulamaları Dersi Dönem Sonu Projesi** kapsamında geliştirilmiş, görüntü işleme filtreleri ve yapay zeka nesne tespiti teknolojilerini harmanlayan interaktif bir **Akıllı Güvenlik Arayüzü**dür.
 
 ---
@@ -23,7 +25,11 @@ Projeyi **Google Colab** üzerinde veya **Yerel Bilgisayarınızda (Local)** ça
 ### Seçenek A: Google Colab Üzerinde Çalıştırma (Hızlı & Kolay)
 
 Sistem bulut üzerinde hızlı çalışacak şekilde optimize edilmiştir.
-1. `sevval_ai_proje_son.ipynb` dosyasını tarayıcınızda açtığınız **Google Colab** ortamına yükleyin (upload).
+
+> [!NOTE]
+> GitHub bazen Jupyter Notebook (`.ipynb`) dosyalarını kendi arayüzünde görüntülerken yükleme hatası verebilir (bu GitHub sunucularının anlık yoğunluğundan kaynaklanan kronik bir durumdur). Dosyada hiçbir bozukluk yoktur. Notebook'u doğrudan açmak için en üstte bulunan **"Open in Colab"** butonuna tıklayabilirsiniz.
+
+1. Sayfanın en üstünde yer alan **Open in Colab** butonuna tıklayarak veya `sevval_ai_proje_son.ipynb` dosyasını tarayıcınızda açtığınız **Google Colab** ortamına yükleyerek açın.
 2. Yukarıdaki menüden **Çalışma Zamanı > Çalışma zamanı türünü değiştir** yolunu izleyerek **GPU** (örn. T4 GPU) donanımını seçin.
 3. Notebook içindeki hücreleri yukarıdan aşağıya sırayla çalıştırın.
 4. En son hücreyi çalıştırdığınızda çıktıda belirecek olan **mavi renkli proxy bağlantısına (Google Colab tünel linki)** tıklayın.
