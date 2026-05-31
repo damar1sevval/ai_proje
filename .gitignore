@@ -1,0 +1,25 @@
+# Python Cache
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Jupyter Notebook Checkpoints
+.ipynb_checkpoints
+
+# Virtual Environments
+.venv/
+venv/
+env/
+ENV/
+
+# IDE Settings
+.vscode/
+.idea/
+
+# Operating System Files
+.DS_Store
+Thumbs.db
+
+# Flask Temp / Uploads / Models (Optional download cache)
+*.pt
+yolov8n.pt

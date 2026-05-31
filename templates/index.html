@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="RYZ2002 Yapay Zeka Uygulamaları Dersi Dönem Sonu Projesi - Akıllı Güvenlik, Nesne Takibi ve Yasak Bölge İhlal Tespit Sistemi.">
+    <title>RYZ2002 - Akıllı Güvenlik ve İhlal Tespit Sistemi</title>
+    <!-- Custom CSS Link -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body id="app-body">
+    <!-- Top Navigation / Header -->
+    <header>
+        <div class="logo-container">
+            <div class="logo-icon">
+                <!-- SVG Shield Logo -->
+                <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                </svg>
+            </div>
+            <div>
+                <h1>Akıllı Güvenlik & İhlal Tespit Sistemi</h1>
+            </div>
+        </div>
+        <div class="header-badge">
+            RYZ2002 Dönem Sonu Projesi
+        </div>
+    </header>
+
+    <!-- Main Content Grid -->
+    <main>
+        <!-- Left Section: Live Feed and Settings Controls -->
+        <div class="video-section">
+            <!-- Video Display Panel -->
+            <div class="video-container glass-panel" id="video-wrapper">
+                <!-- Hidden HTML Video for capturing frames in browser -->
+                <video id="webcam-video" autoplay playsinline muted style="display:none;"></video>
+                
+                <!-- Main canvas where user draws the zone and webcam is rendered initially -->
+                <canvas id="canvas-overlay"></canvas>
+                
+                <!-- Displayed image from flask containing the processed frame -->
+                <img id="video-stream-img" class="video-stream-img" alt="İşlenmiş Yapay Zeka Akışı">
+                
+                <!-- Webcam Offline Placeholder -->
+                <div class="video-placeholder" id="video-placeholder">
+                    <div class="placeholder-icon">
+                        <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-video-off">
+                            <path d="M10.66 6H14a2 2 0 0 1 2 2v2.34"/>
+                            <path d="m22 8-6 4 6 4V8z"/>
+                            <path d="M2 2l20 20"/>
+                            <path d="M21.5 21.5H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h3.34"/>
+                        </svg>
+                    </div>
+                    <h2>Kamera Bağlantısı Yok</h2>
+                    <p>Yapay zeka analizini başlatmak için aşağıdaki "Kamerayı Başlat" butonuna tıklayın.</p>
+                </div>
+            </div>
+
+            <!-- Dashboard Interaction Buttons -->
+            <div class="btn-group">
+                <button class="btn btn-primary" id="btn-toggle-cam">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-play"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+                    Kamerayı Başlat
+                </button>
+                <button class="btn btn-secondary" id="btn-clear-zone">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-trash-2"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/></svg>
+                    Bölgeyi Temizle
+                </button>
+                <button class="btn btn-danger" id="btn-reset-stats">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-rotate-ccw"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
+                    İstatistikleri Sıfırla
+                </button>
+            </div>
+
+            <!-- Control Settings Panel -->
+            <div class="controls-grid">
+                <!-- Image Processing Settings -->
+                <div class="control-card glass-panel">
+                    <h3 class="control-title">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-sliders-horizontal"><line x1="21" x2="14" y1="4" y2="4"/><line x1="10" x2="3" y1="4" y2="4"/><line x1="21" x2="12" y1="12" y2="12"/><line x1="8" x2="3" y1="12" y2="12"/><line x1="21" x2="16" y1="20" y2="20"/><line x1="12" x2="3" y1="20" y2="20"/><line x1="14" x2="14" y1="2" y2="6"/><line x1="8" x2="8" y1="10" y2="14"/><line x1="16" x2="16" y1="18" y2="22"/></svg>
+                        Görüntü İşleme Filtreleri
+                    </h3>
+                    <div class="control-group">
+                        <label for="filter-select">Görüntü İşleme Metodu</label>
+                        <select id="filter-select">
+                            <option value="none">Normal (Filtresiz)</option>
+                            <option value="grayscale">Grayscale (Gri Tonlama)</option>
+                            <option value="canny">Canny Edge (Kenar Algılama)</option>
+                            <option value="blur">Gaussian Blur (Bulanıklaştırma)</option>
+                            <option value="threshold">Binary Threshold (Eşikleme)</option>
+                        </select>
+                        <p style="font-size: 0.75rem; color: var(--text-muted); margin-top: 5px;">
+                            Seçilen OpenCV filtresi, yapay zeka tespit kutularının altında eş zamaner olarak uygulanır.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- AI and Class Detection Settings -->
+                <div class="control-card glass-panel">
+                    <h3 class="control-title">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-brain-circuit"><path d="M12 5a3 3 0 1 0-5.997.125 4 4 0 0 0-2.526 5.77 4 4 0 0 0 .556 6.588A4 4 0 1 0 12 18Z"/><path d="M9 13a3 3 0 0 1 3-3c1.657 0 3 1.343 3 3"/><path d="M12 10V3"/><path d="M12 18v3"/><path d="M16 13h5"/><path d="M5 13h2"/><path d="m19 9-2.5 2.5"/><path d="m19 17-2.5-2.5"/><path d="m5 9 2.5 2.5"/><path d="M17 13a3 3 0 0 0-3-3"/></svg>
+                        Yapay Zeka Sınıf Ayarları
+                    </h3>
+                    <div class="control-group">
+                        <label>YOLOv8 Güven Eşiği (Confidence)</label>
+                        <div class="slider-container">
+                            <input type="range" id="conf-slider" min="0.10" max="0.90" step="0.05" value="0.25">
+                            <span class="slider-val" id="conf-val">0.25</span>
+                        </div>
+                        
+                        <label style="margin-top: 8px;">Algılanacak Sınıflar</label>
+                        <div class="checkbox-grid">
+                            <label class="checkbox-container">
+                                <input type="checkbox" class="class-checkbox" value="person" checked>
+                                <span class="custom-checkmark"></span> İnsan
+                            </label>
+                            <label class="checkbox-container">
+                                <input type="checkbox" class="class-checkbox" value="car" checked>
+                                <span class="custom-checkmark"></span> Otomobil
+                            </label>
+                            <label class="checkbox-container">
+                                <input type="checkbox" class="class-checkbox" value="dog" checked>
+                                <span class="custom-checkmark"></span> Köpek
+                            </label>
+                            <label class="checkbox-container">
+                                <input type="checkbox" class="class-checkbox" value="cat" checked>
+                                <span class="custom-checkmark"></span> Kedi
+                            </label>
+                            <label class="checkbox-container">
+                                <input type="checkbox" class="class-checkbox" value="bicycle">
+                                <span class="custom-checkmark"></span> Bisiklet
+                            </label>
+                            <label class="checkbox-container">
+                                <input type="checkbox" class="class-checkbox" value="hand" checked>
+                                <span class="custom-checkmark"></span> El (Hand)
+                            </label>
+                            <label class="checkbox-container">
+                                <input type="checkbox" id="toggle-audio" checked>
+                                <span class="custom-checkmark"></span> Sesli Alarm
+                            </label>
+                            <label class="checkbox-container" style="grid-column: span 2;">
+                                <input type="checkbox" id="toggle-mirror">
+                                <span class="custom-checkmark"></span> Ayna Modu (Görüntüyü Çevir)
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Right Section: Statistics, Live Charts, and Log History -->
+        <div class="stats-section">
+            <!-- System Security Status Banner -->
+            <div class="status-panel glass-panel">
+                <span class="status-label">Sistem Durumu:</span>
+                <span class="status-badge status-secure" id="status-badge">
+                    <span class="status-dot"></span>
+                    <span id="status-text">Güvenli</span>
+                </span>
+            </div>
+
+            <!-- Numerical Statistics Cards -->
+            <div class="stats-grid">
+                <div class="stat-card glass-panel" id="card-active-detect">
+                    <span class="stat-value" id="val-active-detect">0</span>
+                    <span class="stat-name">Aktif Tespit</span>
+                </div>
+                <div class="stat-card glass-panel" id="card-total-alert">
+                    <span class="stat-value" id="val-total-alert">0</span>
+                    <span class="stat-name">Toplam İhlal</span>
+                </div>
+                <div class="stat-card glass-panel">
+                    <span class="stat-value" id="val-fps">0.0</span>
+                    <span class="stat-name">İşlem Hızı (FPS)</span>
+                </div>
+            </div>
+
+            <!-- Live Chart Panel -->
+            <div class="chart-panel glass-panel">
+                <h3 class="control-title" style="margin-bottom: 5px; border-bottom: none;">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-trending-up"><polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/></svg>
+                    Canlı Nesne Grafiği
+                </h3>
+                <div class="chart-container">
+                    <canvas id="live-chart"></canvas>
+                </div>
+            </div>
+
+            <!-- Alert Activity Log Panel -->
+            <div class="logs-panel glass-panel">
+                <h3 class="control-title" style="margin-bottom: 12px;">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-bell-ring"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/><path d="M4 2C2.8 3.7 2 5.7 2 8"/><path d="M20 2c1.2 1.7 2 3.7 2 6"/></svg>
+                    Güvenlik İhlal Günlüğü
+                </h3>
+                <ul class="logs-list" id="logs-list">
+                    <li class="log-item" style="border-left-color: var(--color-secondary);">
+                        <span class="log-time">--:--:--</span>
+                        <span class="log-msg">Sistem başlatıldı. İzleme bekleniyor...</span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <p>RYZ2002 Yapay Zeka Uygulamaları Dersi Dönem Sonu Projesi &copy; 2026. <br>
+           Google Colab üzerinde GPU hızlandırıcı ile çalışacak şekilde optimize edilmiştir.</p>
+    </footer>
+
+    <!-- CDN Libraries: Chart.js & Lucide Icons -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    
+    <!-- Custom Frontend Javascript -->
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+</body>
+</html>
